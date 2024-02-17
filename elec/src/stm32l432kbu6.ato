@@ -1,2 +1,177 @@
-module Stm32l432kbu6:
-    signal gnd
+import Power from "generics/interfaces.ato"
+import UART from "generics/interfaces.ato"
+import SPI from "generics/interfaces.ato"
+import I2C from "generics/interfaces.ato"
+import SWD from "generics/interfaces.ato"
+import JTAG from "generics/interfaces.ato"
+import Resistor from "generics/resistors.ato"
+import Capacitor from "generics/capacitors.ato"
+
+component _STM32L432KBU6:
+    # component STM32L432KBU6
+    footprint = "UFQFPN-32_L5.0-W5.0-P0.50-TL-EP3.5"
+    lcsc_id = "C94784"
+    mpn = "C94784"
+    # pins
+    signal VDD ~ pin p1
+    signal PC14_OSC32_IN ~ pin p2
+    signal PC15_OSC32_OUT ~ pin p3
+    signal NRST ~ pin p4
+    signal VDDA_VREF_ ~ pin p5
+    signal PA0_CK_IN ~ pin p6
+    signal PA1 ~ pin p7
+    signal PA2 ~ pin p8
+    signal PA3 ~ pin p9
+    signal PA4 ~ pin p10
+    signal PA5 ~ pin p11
+    signal PA6 ~ pin p12
+    signal PA7 ~ pin p13
+    signal PB0 ~ pin p14
+    signal PB1 ~ pin p15
+    signal VSS ~ pin p16
+    VDD ~ pin p17
+    signal PA8 ~ pin p18
+    signal PA9 ~ pin p19
+    signal PA10 ~ pin p20
+    signal PA11 ~ pin p21
+    signal PA12 ~ pin p22
+    signal PA13 ~ pin p23
+    signal PA14 ~ pin p24
+    signal PA15 ~ pin p25
+    signal PB3 ~ pin p26
+    signal PB4 ~ pin p27
+    signal PB5 ~ pin p28
+    signal PB6 ~ pin p29
+    signal PB7 ~ pin p30
+    signal PH3_BOOT0 ~ pin p31
+    VSS ~ pin p32
+    signal EP ~ pin p33
+
+    # Powers: VCore regulator, digital circuits
+    power_vdd = new Power
+    power_vdd.vcc ~ VDD
+    power_vdd.gnd ~ VSS
+
+    # Powers: A/D converters, comparators, opamps
+    power_vdda = new Power
+    power_vdda.vcc ~ VDDA_VREF_
+    power_vdda.gnd ~ VSS
+
+    spi1 = new SPI
+    spi1.cs ~ PA4
+    spi1.sck ~ PA5
+    spi1.miso ~ PA6
+    spi1.mosi ~ PA7
+    spi1.gnd ~ VSS
+
+    uart1 = new UART
+    uart1.tx ~ PB6
+    uart1.rx ~ PB7
+    uart1.gnd ~ VSS
+
+    i2c1 = new I2C
+    i2c1.sda ~ PA10
+    i2c1.scl ~ PA9
+    i2c1.gnd ~ VSS
+
+    swd = new SWD
+    swd.swdio ~ PA13
+    swd.swclk ~ PA14
+    swd.swo ~ PB3
+    swd.gnd ~ VSS
+
+    jtag = new JTAG
+    jtag.tms ~ PA13
+    jtag.tck ~ PA14
+    jtag.tdi ~ PA15
+    jtag.tdo ~ PB3
+    jtag.gnd ~ VSS
+
+
+module STM32L432KBU6:
+    ic = new _STM32L432KBU6
+    power = new Power
+    spi = new SPI
+    uart = new UART
+    i2c = new I2C
+    swd = new SWD
+    jtag = new JTAG
+
+    # Power both VDD and VDDA
+    power ~ ic.power_vdd
+    power ~ ic.power_vdda
+
+    # Connect interfaces
+    spi ~ ic.spi1
+    uart ~ ic.uart1
+    i2c ~ ic.i2c1
+    swd ~ ic.swd
+    jtag ~ ic.jtag
+
+    # Decoupling capacitors
+    vdd_cap_1 = new Capacitor
+    vdd_cap_1.power ~ ic.power_vdd
+    vdd_cap_1.value = 4.7uF +/- 20%
+    vdd_cap_1.package = "0402"
+
+    vdd_cap_2 = new Capacitor
+    vdd_cap_2.power ~ ic.power_vdd
+    vdd_cap_2.value = 100nF +/- 20%
+    vdd_cap_2.package = "0402"
+
+    vdda_cap_1 = new Capacitor
+    vdda_cap_1.power ~ ic.power_vdda
+    vdda_cap_1.value = 1uF +/- 20%
+    vdda_cap_1.package = "0402"
+
+    vdda_cap_2 = new Capacitor
+    vdda_cap_2.power ~ ic.power_vdda
+    vdda_cap_2.value = 100nF +/- 20%
+    vdda_cap_2.package = "0402"
+
+    vdda_cap_3 = new Capacitor
+    vdda_cap_3.power ~ ic.power_vdda
+    vdda_cap_3.value = 10nF +/- 20%
+    vdda_cap_3.package = "0402"
+
+    # pullup on tx line
+    tx_pullup = new Resistor
+    tx_pullup.p1 ~ uart.tx
+    tx_pullup.p2 ~ power.vcc
+    tx_pullup.value = 330ohm +/- 10%
+    tx_pullup.package = "0402"
+
+    # boot resistor
+    boot_resistor = new Resistor
+    boot_resistor.p1 ~ ic.PH3_BOOT0
+    boot_resistor.p2 ~ power.gnd
+    boot_resistor.value = 10kohm +/- 10%
+    boot_resistor.package = "0402"
+
+    # 32.768 kHz crystal (basic part)
+    crystal = new _Q13FC1350000400
+    crystal.xin ~ ic.PC14_OSC32_IN
+    crystal.xout ~ ic.PC15_OSC32_OUT
+
+    # 32.768 kHz crystal load capacitors
+    load_cap_1 = new Capacitor
+    load_cap_1.1 ~ ic.PC14_OSC32_IN
+    load_cap_1.2 ~ power.gnd
+    load_cap_1.value = 12.5pF +/- 20%
+    load_cap_1.package = "0402"
+
+    load_cap_2 = new Capacitor
+    load_cap_2.1 ~ ic.PC15_OSC32_OUT
+    load_cap_2.2 ~ power.gnd
+    load_cap_2.value = 12.5pF +/- 20%
+    load_cap_2.package = "0402"
+
+
+component _Q13FC1350000400:
+    # component Q13FC1350000400
+    footprint = "FC-135R_L3.2-W1.5"
+    lcsc_id = "C32346"
+    mpn = "C32346"
+    # pins
+    signal xin ~ pin 1
+    signal xout ~ pin 2

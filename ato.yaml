@@ -1,6 +1,9 @@
 ato-version: ^0.2.0
 builds:
   default:
-    entry: elec/src/stm32l432kbu6.ato:Stm32l432kbu6
+    entry: elec/src/stm32l432kbu6.ato:STM32L432KBU6
 dependencies:
 - generics
+
+services:
+  components: https://atopile-component-server-atsuhzfd5a-uc.a.run.app/jlc
