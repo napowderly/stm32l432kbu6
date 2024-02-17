@@ -1,6 +1,7 @@
 import Power from "generics/interfaces.ato"
 import UART from "generics/interfaces.ato"
 import SPI from "generics/interfaces.ato"
+import Pair from "generics/interfaces.ato"
 import I2C from "generics/interfaces.ato"
 import SWD from "generics/interfaces.ato"
 import JTAG from "generics/interfaces.ato"
@@ -167,6 +168,99 @@ module STM32L432KBU6:
     load_cap_2.2 ~ power.gnd
     load_cap_2.value = 12.5pF +/- 20%
     load_cap_2.package = "0402"
+
+    # Pairs to GPIOs
+    PA0 = new Pair
+    PA0.io ~ ic.PA0_CK_IN
+    PA0.gnd ~ power.gnd
+
+    PA1 = new Pair
+    PA1.io ~ ic.PA1
+    PA1.gnd ~ power.gnd
+
+    PA2 = new Pair
+    PA2.io ~ ic.PA2
+    PA2.gnd ~ power.gnd
+
+    PA3 = new Pair
+    PA3.io ~ ic.PA3
+    PA3.gnd ~ power.gnd
+
+    PA4 = new Pair
+    PA4.io ~ ic.PA4
+    PA4.gnd ~ power.gnd
+
+    PA5 = new Pair
+    PA5.io ~ ic.PA5
+    PA5.gnd ~ power.gnd
+
+    PA6 = new Pair
+    PA6.io ~ ic.PA6
+    PA6.gnd ~ power.gnd
+
+    PA7 = new Pair
+    PA7.io ~ ic.PA7
+    PA7.gnd ~ power.gnd
+
+    PA8 = new Pair
+    PA8.io ~ ic.PA8
+    PA8.gnd ~ power.gnd
+
+    PA9 = new Pair
+    PA9.io ~ ic.PA9
+    PA9.gnd ~ power.gnd
+
+    PA10 = new Pair
+    PA10.io ~ ic.PA10
+    PA10.gnd ~ power.gnd
+
+    PA11 = new Pair
+    PA11.io ~ ic.PA11
+    PA11.gnd ~ power.gnd
+
+    PA12 = new Pair
+    PA12.io ~ ic.PA12
+    PA12.gnd ~ power.gnd
+
+    PA13 = new Pair
+    PA13.io ~ ic.PA13
+    PA13.gnd ~ power.gnd
+
+    PA14 = new Pair
+    PA14.io ~ ic.PA14
+    PA14.gnd ~ power.gnd
+
+    PA15 = new Pair
+    PA15.io ~ ic.PA15
+    PA15.gnd ~ power.gnd
+
+    PB0 = new Pair
+    PB0.io ~ ic.PB0
+    PB0.gnd ~ power.gnd
+
+    PB1 = new Pair
+    PB1.io ~ ic.PB1
+    PB1.gnd ~ power.gnd
+
+    PB3 = new Pair
+    PB3.io ~ ic.PB3
+    PB3.gnd ~ power.gnd
+
+    PB4 = new Pair
+    PB4.io ~ ic.PB4
+    PB4.gnd ~ power.gnd
+
+    PB5 = new Pair
+    PB5.io ~ ic.PB5
+    PB5.gnd ~ power.gnd
+
+    PB6 = new Pair
+    PB6.io ~ ic.PB6
+    PB6.gnd ~ power.gnd
+
+    PB7 = new Pair
+    PB7.io ~ ic.PB7
+    PB7.gnd ~ power.gnd
 
 
 component _Q13FC1350000400:
